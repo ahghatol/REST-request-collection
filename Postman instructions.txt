@@ -1,0 +1,324 @@
+
+=======================================================================================
+############################ POSTMAN PREREQUISITES ####################################
+=======================================================================================
+Postman installation :
+https://chrome.google.com/webstore/search/postman%20rest%20client?utm_source=chrome-ntp-icon
+
+Start Postman:
+- Open Chrome -> direct link  chrome://apps/ -> click Postman
+
+Import the REST_APIs.json.txt collection:
+- When you open Postman go to "Collections" tab situated on the left upper corner 
+- There is an icon right to the "Collections" tab and when you put the mouse over it
+ pops up "Import collection"
+- Drag and drop the REST_APIs.json.txt file in the box
+
+
+
+ --------------------------------------------------------------------------------------
+ 
+ 
+=======================================================================================
+ ########################### REQUESTS INSTRUCTIONS ####################################
+=======================================================================================
+ For all of the requests you can preview your request by clicking "Preview" or directly click "Send" when you are ready.
+ 
+ The "Client ID" and "Client Secret" are located in https://www.developergarden.com/my-account/application-management/ section in 
+ your previously created app (https://www.developergarden.com/apis/documentation/bundle/telekom-api-rest/html/developergarden_createapp.html). You must click on the "Edit"  
+ for your app. The fields you need are "Client ID" and "Client Secret". Copy them for further usage in this tutorial.
+
+ In every request "tel:..." the three dots should be replaced with a telephone number.
+---------------------------------------------------------------------------------------
+Authentication request:
+---------------------------------------------------------------------------------------
+1. Generate Authorization header:
+	-Go to "Basic Auth". Add in the "Username" field the "Client ID",  in "Password" field the "Client Secret". 
+	-Click "Refresh headers"
+
+2. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "access_token": "eyJhbGc....",
+    "token_type": "bearer",
+    "expires_in": 28800,
+    "scope": "DC0QX4UK"
+}
+***************************************************************************************
+3. For all of the requests below this step should be done:
+ -In the "Authorization" Header go to the value field (OAuth realm="developergarden.com",oauth_token="") and
+ add the "access_token" value from the "Authentication" request .
+ 
+=======================================================================================
+---------------------------------------------------------------------------------------
+Get Charged Amount:
+---------------------------------------------------------------------------------------
+1. Currently the environment is set to "production". You can change it by changing the URI
+ https://gateway.developer.telekom.com/p3gw-mod-odg-admin/rest/production/charge/(ID). Just replace "production" with the 
+one you need
+
+2. Set the parameter accountID if you want to use subaccount
+
+3. Replace in  the URI  (ID) with the ID of the Voice Call/Conference Call
+
+4. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    },
+    "charge": "0"
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Query Account Balance:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the value field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". Like that oauth_token="EdfDdfs..."
+ 
+2. Currently the environment is set to "production". You can change it by changing the URI. Just replace "production" with the one you need.
+
+3. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    },
+    "accounts": [
+        {
+            "account": "121927",
+            "credits": "0"
+        }
+    ]
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Set Quota:
+---------------------------------------------------------------------------------------
+1.  By default the module ID is GlobalSMSPremium. You can set the module ID on your wish (GlobalSMSBasic, MmsSandbox etc.).
+ It is defined at the end of the URI 
+ https://gateway.developer.telekom.com/p3gw-mod-odg-admin/rest/production/quotainfo/GlobalSmsPremium  
+ 
+2. Set the value of the Quota you want in the "value" field udner "x-www-form-urlencoded" . Currently it is 99
+
+3. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    }
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Request Quota:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the value field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". Like that oauth_token="EdfDdfs..."
+ 
+2. By default the module ID is "GlobalSMSPremium". You can set the module ID on your wish (GlobalSMSBasic, MmsSandbox etc.). 
+
+3. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    },
+    "maxQuota": "1000000",
+    "maxUserQuota": "0",
+    "quotaLevel": "0"
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Send SMS:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the "Value" field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". For example - oauth_token="EdfDdfs..."
+ 
+2. By default the sender address is "0191011" but you can customize it so that a different number can appear(https://www.developergarden.com/apis/documentation/bundle/telekom-api-rest/html/sendsms_send_s_m_s.html). 
+
+3. The URL located at the top must look like : "https://gateway.developer.telekom.com/plone/sms/rest/premium/smsmessaging/v1/outbound/{senderAddress}/requests", where {senderAddress} by default should be "0191011" or 
+a different number (note: the number in the "senderAddress" field in the request must be the same with the {senderAddress} in the URL).
+Currently the environment is set to "premium". You can change it by changing the URI. Just replace "premium" with the one you need.
+
+
+4. The "senderAddress" value and the {senderAddress} value should both have the format: "tel:+..." except if it is the default value ("0191011").
+
+5. In the request field below the "raw" view you should add a valid phone number as a recipient in "address" field. The format of the number should look like "tel:+...".
+
+6. In the request field below the "raw" view you can change the text of the SMS that will be sent in the "message" field. The default is "Test".
+
+7. In the request field below the "raw" view you can change the "outboundEncoding" value which by default is "7bitGSM" with "16bitUCS2" if you need to use such an encoding.
+
+8. In the request field below the "raw" view you can change the "senderName" field which will change the name displayed on the phone as a sender.
+
+9. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "outboundSMSMessageRequest": {
+        "senderAddress": "0191011",
+        "outboundSMSTextMessage": {
+            "message": "Test"
+        },
+        "receiptRequest": {
+            "notifyURL": "http://application.example.com/notifications/DeliveryInfoNotification",
+            "callbackData": "some-data-useful-to-the-requester"
+        },
+        "senderName": "ACME Inc.",
+        "deliveryInfoList": {
+            "resourceURL": "https://gateway.developer.telekom.com/plone/sms/rest/premium/smsmessaging/v1/outbound/0191011/requests/aefd7046-d3d3-41ca-a2ed-c12b0f2b0b8d/deliveryInfos",
+            "deliveryInfo": [
+                {
+                    "address": "tel:+...",
+                    "deliveryStatus": "MessageWaiting"
+                }
+            ]
+        },
+        "resourceURL": "https://gateway.developer.telekom.com/plone/sms/rest/premium/smsmessaging/v1/outbound/0191011/requests/aefd7046-d3d3-41ca-a2ed-c12b0f2b0b8d",
+        "outboundEncoding": "7bitGSM",
+        "address": [
+            "tel:+..."
+        ]
+    }
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Query The Delivery Report:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the "Value" field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". For example - oauth_token="EdfDdfs..."
+
+2. The URL located at the top must look like : "https://gateway.developer.telekom.com/plone/sms/rest/premium/smsmessaging/v1/outbound/{senderAddress}/requests/{requestID}/deliveryInfos",
+where {senderAddress} by default should be "0191011" and {requestID} is the one returned from an SMS send request
+or a different number (note: the number in the "senderAddress" field in the request must be the same with the {senderAddress} in the URI).
+Currently the environment is set to "production". You can change it by changing the URI. Just replace "production" with the one you need.
+
+3. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "deliveryInfoList": {
+        "resourceURL": "https://gateway.developer.telekom.com/plone/sms/rest/premium/smsmessaging/v1/outbound/{senderAddress}/requests/{requestID}/deliveryInfos",
+        "deliveryInfo": [
+            {
+                "address": "tel:...",
+                "deliveryStatus": "DeliveredToTerminal"
+            }
+        ]
+    }
+}
+***************************************************************************************
+
+=======================================================================================
+---------------------------------------------------------------------------------------
+Get Validated Numbers:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the "Value" field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". For example - oauth_token="EdfDdfs..."
+
+2. Currently the environment is set to "production". You can change it by changing the URI
+https://gateway.developer.telekom.com/plone/odg-sms-validation/rest/production/validatednumbers . Just replace "production" with the 
+one you need
+
+3. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    },
+    "numbers": [
+        {
+            "number": "",
+            "validUntil": null
+        },
+        {
+            "number": "",
+            "validUntil": null
+        }
+    ]
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Send Validation Keyword:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the "Value" field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". For example - oauth_token="EdfDdfs..."
+
+2. Currently the environment is set to "production". You can change it by changing the URI
+https://gateway.developer.telekom.com/plone/odg-sms-validation/rest/production/send . Just replace "production" with the 
+one you need
+
+3. In the request field below the "x-www-form-urlencoded" view you should add a number to be validated as a value of the "number" attribute. The number should look like: "+4911111111",
+without "tel:" in the phone number field.
+
+4. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    }
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Validation Of Phone Number:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the "Value" field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". For example - oauth_token="EdfDdfs..."
+
+2. Currently the environment is set to "production". You can change it by changing the URI
+https://gateway.developer.telekom.com/plone/odg-sms-validation/rest/production/validatednumbers/{number} . Just replace "production" with the 
+one you need. Also "{number}" should be replaced with the phone number that will be validated. The number should look like: "+4911111111", without "tel:" in the phone number field.
+
+3. In the request field below the "x-www-form-urlencoded" view you should add the validation key you received in the "Send Validation Keyword" request as the value of the "key" attribute. 
+
+4. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    }
+}
+***************************************************************************************
+=======================================================================================
+---------------------------------------------------------------------------------------
+Invalidation Of Phone Number:
+---------------------------------------------------------------------------------------
+1. In the "Authorization" Header go to the "Value" field (OAuth realm="developergarden.com",oauth_token="") and
+ add the access_token value from the Authentication request as a value of "oauth_token". For example - oauth_token="EdfDdfs..."
+
+2. Currently the environment is set to "production". You can change it by changing the URI
+https://gateway.developer.telekom.com/plone/odg-sms-validation/rest/production/validatednumbers/{number} . Just replace "production" with the 
+one you need. Also "{number}" should be replaced with the phone number that will be validated. The number should look like: "+4911111111", without "tel:" in the phone number field.
+
+3. Click on "Send" button.
+
+***********************************Sample result:**************************************
+{
+    "status": {
+        "statusCode": "0000",
+        "statusMessage": "Success."
+    }
+}
+***************************************************************************************
